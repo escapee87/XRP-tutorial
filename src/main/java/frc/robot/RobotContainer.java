@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.XRPDrivetrain;
@@ -21,6 +23,11 @@ public class RobotContainer {
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_xrpDrivetrain);
 
+  private XboxController m_Controller = new XboxController(0);
+
+  private DoubleSupplier leftY = () -> m_Controller.getLeftY();
+  private DoubleSupplier rightY = () -> m_Controller.getRightY();
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the button bindings
@@ -35,6 +42,12 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     
+  }
+
+
+  public void drive() {
+    m_xrpDrivetrain.tankDrive(leftY.getAsDouble(), rightY.getAsDouble());
+    System.out.println(leftY.getAsDouble() + ", " + rightY.getAsDouble());
   }
 
   /**
