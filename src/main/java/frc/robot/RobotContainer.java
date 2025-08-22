@@ -7,7 +7,8 @@ package frc.robot;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.ExampleCommand;
+import frc.robot.autons.ForwardAuton;
+import frc.robot.commands.ForwardCommand;
 import frc.robot.subsystems.XRPDrivetrain;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -21,12 +22,12 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final XRPDrivetrain m_xrpDrivetrain = new XRPDrivetrain();
 
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_xrpDrivetrain);
+  private final ForwardCommand m_forwardCommand = new ForwardCommand(m_xrpDrivetrain);
 
   private XboxController m_Controller = new XboxController(0);
 
-  private DoubleSupplier leftY = () -> m_Controller.getLeftY();
-  private DoubleSupplier rightY = () -> m_Controller.getRightY();
+  private DoubleSupplier m_leftY = () -> m_Controller.getLeftY();
+  private DoubleSupplier m_rightY = () -> m_Controller.getRightY();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -44,10 +45,9 @@ public class RobotContainer {
     
   }
 
-
   public void drive() {
-    m_xrpDrivetrain.tankDrive(leftY.getAsDouble(), rightY.getAsDouble());
-    System.out.println(leftY.getAsDouble() + ", " + rightY.getAsDouble());
+    m_xrpDrivetrain.tankDrive(m_leftY.getAsDouble(), m_rightY.getAsDouble());
+    System.out.println(m_leftY.getAsDouble() + ", " + m_rightY.getAsDouble());
   }
 
   /**
@@ -57,6 +57,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_autoCommand;
+    return ForwardAuton.goForward(m_xrpDrivetrain, m_xrpDrivetrain);
   }
 }
