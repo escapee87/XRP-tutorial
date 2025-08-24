@@ -7,8 +7,9 @@ package frc.robot;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.autons.ForwardAuton;
-import frc.robot.autons.FrontBackAuton;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.autons.SimpleAutons;
 import frc.robot.commands.ForwardCommand;
 import frc.robot.subsystems.XRPDrivetrain;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -25,15 +26,20 @@ public class RobotContainer {
 
   private final ForwardCommand m_forwardCommand = new ForwardCommand(m_xrpDrivetrain);
 
-  private XboxController m_Controller = new XboxController(0);
+  SendableChooser<Command> m_chooser = new SendableChooser<Command>();
 
-  private DoubleSupplier m_leftY = () -> m_Controller.getLeftY();
-  private DoubleSupplier m_rightY = () -> m_Controller.getRightY();
+  private XboxController m_controller = new XboxController(0);
+
+  private DoubleSupplier m_leftY = () -> m_controller.getLeftY();
+  private DoubleSupplier m_rightY = () -> m_controller.getRightY();
+
+  
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
+    createAutonChooser();
   }
 
   /**
@@ -44,6 +50,13 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     
+  }
+
+  private void createAutonChooser() {
+    m_chooser.setDefaultOption("Nothing", SimpleAutons.nothing(m_xrpDrivetrain, m_xrpDrivetrain));
+    m_chooser.addOption("Forward", SimpleAutons.forward(m_xrpDrivetrain, m_xrpDrivetrain));
+    m_chooser.addOption("Front and Back", SimpleAutons.frontBack(m_xrpDrivetrain, m_xrpDrivetrain));
+    SmartDashboard.putData(m_chooser);
   }
 
   public void drive() {
@@ -57,7 +70,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
-    return FrontBackAuton.frontBack(m_xrpDrivetrain, m_xrpDrivetrain);
+    return m_chooser.getSelected();
   }
 }

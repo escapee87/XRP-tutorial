@@ -5,7 +5,20 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.subsystems.XRPDrivetrain;
 
-public class FrontBackAuton {
+
+public class SimpleAutons {
+    public static Command nothing(XRPDrivetrain drivetrain, Subsystem subsystem) {
+        return Commands.sequence(
+            Commands.none()
+        );
+    }
+
+    public static Command forward(XRPDrivetrain drivetrain, Subsystem subsystem) {
+        return Commands.sequence(
+            Commands.run(() -> drivetrain.tankDrive(0.7, 0.7), subsystem)
+        );
+    }
+    
     public static Command frontBack(XRPDrivetrain drivetrain, Subsystem subsystem) {
         return Commands.sequence(
             Commands.race(
