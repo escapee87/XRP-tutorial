@@ -8,6 +8,7 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.autons.ForwardAuton;
+import frc.robot.autons.FrontBackAuton;
 import frc.robot.commands.ForwardCommand;
 import frc.robot.subsystems.XRPDrivetrain;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -57,6 +58,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return ForwardAuton.goForward(m_xrpDrivetrain, m_xrpDrivetrain);
+    return FrontBackAuton.frontBack(m_xrpDrivetrain, m_xrpDrivetrain);
   }
 }
