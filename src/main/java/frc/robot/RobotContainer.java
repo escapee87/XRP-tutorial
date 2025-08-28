@@ -6,13 +6,17 @@ package frc.robot;
 
 import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.autons.SimpleAutons;
 import frc.robot.commands.ForwardCommand;
+import frc.robot.subsystems.XRPArm;
 import frc.robot.subsystems.XRPDrivetrain;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -24,22 +28,26 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final XRPDrivetrain m_xrpDrivetrain = new XRPDrivetrain();
 
+  private final XRPArm m_xrpArm = new XRPArm();
+
   private final ForwardCommand m_forwardCommand = new ForwardCommand(m_xrpDrivetrain);
 
   SendableChooser<Command> m_chooser = new SendableChooser<Command>();
 
-  private XboxController m_controller = new XboxController(0);
+  private Joystick m_controller = new Joystick(0);
 
-  private DoubleSupplier m_leftY = () -> m_controller.getLeftY();
-  private DoubleSupplier m_rightY = () -> m_controller.getRightY();
+  private DoubleSupplier m_leftY = () -> m_controller.getRawAxis(0);
+  private DoubleSupplier m_rightY = () -> m_controller.getRawAxis(1);
 
-  
+  private JoystickButton m_button1 = new JoystickButton(m_controller, 1);
+  private JoystickButton m_button2 = new JoystickButton(m_controller, 2);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
     createAutonChooser();
+    m_xrpArm.dropArm();
   }
 
   /**
@@ -49,7 +57,8 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    
+    m_button1.whileTrue(m_xrpArm.liftArm());
+    m_button2.whileTrue(m_xrpArm.dropArm());
   }
 
   private void createAutonChooser() {
