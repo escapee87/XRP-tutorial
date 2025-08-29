@@ -15,6 +15,7 @@ import frc.robot.autons.SimpleAutons;
 import frc.robot.commands.ForwardCommand;
 import frc.robot.subsystems.XRPArm;
 import frc.robot.subsystems.XRPDrivetrain;
+import frc.robot.subsystems.XRPUltrasonic;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -30,6 +31,8 @@ public class RobotContainer {
 
   private final XRPArm m_xrpArm = new XRPArm();
 
+  private final XRPUltrasonic m_ultrasonic = new XRPUltrasonic();
+
   private final ForwardCommand m_forwardCommand = new ForwardCommand(m_xrpDrivetrain);
 
   SendableChooser<Command> m_chooser = new SendableChooser<Command>();
@@ -41,6 +44,7 @@ public class RobotContainer {
 
   private JoystickButton m_button1 = new JoystickButton(m_controller, 1);
   private JoystickButton m_button2 = new JoystickButton(m_controller, 2);
+  private JoystickButton m_button3 = new JoystickButton(m_controller, 3);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -59,6 +63,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     m_button1.whileTrue(m_xrpArm.liftArm());
     m_button2.whileTrue(m_xrpArm.dropArm());
+    m_button3.toggleOnTrue(m_ultrasonic.alertClose(m_xrpDrivetrain));
   }
 
   private void createAutonChooser() {
