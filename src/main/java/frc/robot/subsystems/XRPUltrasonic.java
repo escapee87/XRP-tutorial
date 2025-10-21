@@ -17,8 +17,8 @@ public class XRPUltrasonic extends SubsystemBase{
         }
     }
 
-    public Command getDistance() {
-        return Commands.run(() -> System.out.println(m_analogInput.getValue()));
+    public double getDistance() {
+        return m_analogInput.getValue();
     }
 
     public Command alertClose(XRPDrivetrain drivetrain) {

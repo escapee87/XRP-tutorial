@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.autons.AdvancedAutons;
 import frc.robot.autons.SimpleAutons;
-import frc.robot.commands.ForwardCommand;
 import frc.robot.subsystems.XRPArm;
 import frc.robot.subsystems.XRPDrivetrain;
 import frc.robot.subsystems.XRPReflectance;
@@ -35,8 +34,6 @@ public class RobotContainer {
   private final XRPUltrasonic m_xrpUltrasonic = new XRPUltrasonic();
 
   private final XRPReflectance m_xrpReflectance = new XRPReflectance();
-
-  private final ForwardCommand m_forwardCommand = new ForwardCommand(m_xrpDrivetrain);
 
   SendableChooser<Command> m_chooser = new SendableChooser<Command>();
 
@@ -76,6 +73,7 @@ public class RobotContainer {
     m_chooser.addOption("Forward", SimpleAutons.forward(m_xrpDrivetrain, m_xrpDrivetrain));
     m_chooser.addOption("Front and Back", SimpleAutons.frontBack(m_xrpDrivetrain, m_xrpDrivetrain));
     m_chooser.addOption("Go Until Line", AdvancedAutons.goUntilLine(m_xrpDrivetrain, m_xrpReflectance));
+    m_chooser.addOption("Get Block", AdvancedAutons.getBlock(m_xrpDrivetrain, m_xrpUltrasonic));
     SmartDashboard.putData(m_chooser);
   }
 

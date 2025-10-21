@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.xrp.XRPServo;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class XRPArm extends SubsystemBase {
@@ -10,16 +9,16 @@ public class XRPArm extends SubsystemBase {
     
     public XRPArm() {}
  
-    public Command liftArm() {
+    public Command dropArm() {
         return Commands.run(() -> {
-            m_armServo.setAngle(180);
+            m_armServo.setAngle(30);
             System.out.println(m_armServo.getPosition());
         });
     }
 
-    public Command dropArm() {
+    public Command liftArm() {
         return Commands.run(() -> {
-            m_armServo.setAngle(30);
+            m_armServo.setAngle(180);
             System.out.println(m_armServo.getPosition());
         });
     }
