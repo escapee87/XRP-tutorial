@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.autons.AdvancedAutons;
 import frc.robot.autons.SimpleAutons;
+import frc.robot.autons.GameAutons;
 import frc.robot.subsystems.XRPArm;
 import frc.robot.subsystems.XRPDrivetrain;
 import frc.robot.subsystems.XRPReflectance;
@@ -74,6 +75,8 @@ public class RobotContainer {
     m_chooser.addOption("Front and Back", SimpleAutons.frontBack(m_xrpDrivetrain, m_xrpDrivetrain));
     m_chooser.addOption("Go Until Line", AdvancedAutons.goUntilLine(m_xrpDrivetrain, m_xrpReflectance));
     m_chooser.addOption("Get Block", AdvancedAutons.getBlock(m_xrpDrivetrain, m_xrpUltrasonic));
+    m_chooser.addOption("Get Blocks From Right", GameAutons.getOwnBlocksRight(m_xrpDrivetrain));
+    m_chooser.addOption("Get Blocks From Left", GameAutons.getOwnBlocksLeft(m_xrpDrivetrain));
     SmartDashboard.putData(m_chooser);
   }
 
