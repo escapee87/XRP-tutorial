@@ -70,19 +70,24 @@ public class RobotContainer {
   }
 
   private void createAutonChooser() {
-    m_chooser.setDefaultOption("Nothing", SimpleAutons.nothing(m_xrpDrivetrain, m_xrpDrivetrain));
-    m_chooser.addOption("Forward", SimpleAutons.forward(m_xrpDrivetrain, m_xrpDrivetrain));
-    m_chooser.addOption("Front and Back", SimpleAutons.frontBack(m_xrpDrivetrain, m_xrpDrivetrain));
-    m_chooser.addOption("Go Until Line", AdvancedAutons.goUntilLine(m_xrpDrivetrain, m_xrpReflectance));
-    m_chooser.addOption("Get Block", AdvancedAutons.getBlock(m_xrpDrivetrain, m_xrpUltrasonic));
+    // m_chooser.setDefaultOption("Nothing", SimpleAutons.nothing(m_xrpDrivetrain, m_xrpDrivetrain));
+    // m_chooser.addOption("Forward", SimpleAutons.forward(m_xrpDrivetrain, m_xrpDrivetrain));
+    // m_chooser.addOption("Front and Back", SimpleAutons.frontBack(m_xrpDrivetrain, m_xrpDrivetrain));
+    // m_chooser.addOption("Go Until Line", AdvancedAutons.goUntilLine(m_xrpDrivetrain, m_xrpReflectance));
+    // m_chooser.addOption("Get Block", AdvancedAutons.getBlock(m_xrpDrivetrain, m_xrpUltrasonic));
+
+    m_chooser.setDefaultOption("Nothing", GameAutons.nothing());
     m_chooser.addOption("Get Blocks From Right", GameAutons.getOwnBlocksRight(m_xrpDrivetrain));
     m_chooser.addOption("Get Blocks From Left", GameAutons.getOwnBlocksLeft(m_xrpDrivetrain));
+    m_chooser.addOption("Steal From Railex", GameAutons.stealFromRailex(m_xrpDrivetrain));
+    m_chooser.addOption("Disrupt Tony", GameAutons.disruptTony(m_xrpDrivetrain));
+    m_chooser.addOption("Total Sabotage Right", GameAutons.totalSabotageRight(m_xrpDrivetrain));
+    m_chooser.addOption("Total Sabotage Left", GameAutons.totalSabotageLeft(m_xrpDrivetrain));
     SmartDashboard.putData(m_chooser);
   }
 
   public void drive() {
     m_xrpDrivetrain.tankDrive(m_leftY.getAsDouble(), m_rightY.getAsDouble());
-    System.out.println(m_leftY.getAsDouble() + ", " + m_rightY.getAsDouble());
   }
 
   /**

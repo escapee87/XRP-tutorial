@@ -12,7 +12,6 @@ public class XRPArm extends SubsystemBase {
     public Command dropArm() {
         return Commands.run(() -> {
             m_armServo.setAngle(30);
-            System.out.println(m_armServo.getPosition());
         });
     }
 
