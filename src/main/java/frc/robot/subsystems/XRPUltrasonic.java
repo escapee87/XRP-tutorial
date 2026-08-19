@@ -10,18 +10,7 @@ public class XRPUltrasonic extends SubsystemBase{
 
     public XRPUltrasonic() {}
 
-    public void alert(XRPDrivetrain drivetrain) {
-        if (m_analogInput.getValue() <= 150) {
-            System.out.println("close");
-            drivetrain.tankDrive(-1, -1);
-        }
-    }
-
     public double getDistance() {
         return m_analogInput.getValue();
-    }
-
-    public Command alertClose(XRPDrivetrain drivetrain) {
-        return Commands.run(() -> alert(drivetrain));
     }
 }

@@ -4,92 +4,126 @@
 
 package frc.robot;
 
+import java.util.function.DoubleSupplier;
+
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.autons.GameAutons;
+import frc.robot.subsystems.XRPArm;
+import frc.robot.subsystems.XRPDrivetrain;
+import frc.robot.subsystems.XRPReflectance;
+import frc.robot.subsystems.XRPSuperstructure;
+import frc.robot.subsystems.XRPUltrasonic;
 
-/**
- * The methods in this class are called automatically corresponding to each mode, as described in
- * the TimedRobot documentation. If you change the name of this class or the package after creating
- * this project, you must also update the Main.java file in the project.
- */
+
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
-  private final RobotContainer m_robotContainer;
+  private final XRPDrivetrain m_xrpDrivetrain = new XRPDrivetrain();
 
-  /**
-   * This function is run when the robot is first started up and should be used for any
-   * initialization code.
-   */
+  private final XRPArm m_xrpArm = new XRPArm();
+
+  private final XRPUltrasonic m_xrpUltrasonic = new XRPUltrasonic();
+
+  private final XRPReflectance m_xrpReflectance = new XRPReflectance();
+
+  private final XRPSuperstructure m_xrpSuperstructure = new XRPSuperstructure(
+    m_xrpDrivetrain,
+    m_xrpArm,
+    m_xrpUltrasonic,
+    m_xrpReflectance
+  );
+
+  SendableChooser<Command> m_chooser = new SendableChooser<Command>();
+
+  private Joystick m_controller = new Joystick(0);
+
+  private DoubleSupplier m_leftY = () -> m_controller.getRawAxis(0);
+  private DoubleSupplier m_rightY = () -> m_controller.getRawAxis(1);
+
+  private JoystickButton m_button1 = new JoystickButton(m_controller, 1);
+  private JoystickButton m_button2 = new JoystickButton(m_controller, 2);
+  private JoystickButton m_button3 = new JoystickButton(m_controller, 3);
+  private JoystickButton m_button4 = new JoystickButton(m_controller, 4);
+
+  
   public Robot() {
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-    // autonomous chooser on the dashboard.
-    m_robotContainer = new RobotContainer();
+    configureButtonBindings();
+    createAutonChooser();
+    m_xrpArm.dropArm();
   }
 
-  /**
-   * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
-   * that you want ran during disabled, autonomous, teleoperated and test.
-   *
-   * <p>This runs after the mode specific periodic functions, but before LiveWindow and
-   * SmartDashboard integrated updating.
-   */
+  private void configureButtonBindings() {
+    m_button1.whileTrue(m_xrpArm.liftArm());
+    m_button2.whileTrue(m_xrpArm.dropArm());
+    // m_button3.toggleOnTrue(m_xrpSuperstructure.keepDistance());
+    m_button4.toggleOnTrue(m_xrpReflectance.getColor());
+  }
+
+  private void createAutonChooser() {
+    // m_chooser.setDefaultOption("Nothing", SimpleAutons.nothing(m_xrpDrivetrain, m_xrpDrivetrain));
+    // m_chooser.addOption("Forward", SimpleAutons.forward(m_xrpDrivetrain, m_xrpDrivetrain));
+    // m_chooser.addOption("Front and Back", SimpleAutons.frontBack(m_xrpDrivetrain, m_xrpDrivetrain));
+    // m_chooser.addOption("Go Until Line", AdvancedAutons.goUntilLine(m_xrpDrivetrain, m_xrpReflectance));
+    // m_chooser.addOption("Get Block", AdvancedAutons.getBlock(m_xrpDrivetrain, m_xrpUltrasonic));
+
+    m_chooser.setDefaultOption("Nothing", GameAutons.nothing());
+    m_chooser.addOption("Get Blocks From Right", GameAutons.getOwnBlocksRight(m_xrpDrivetrain));
+    m_chooser.addOption("Get Blocks From Left", GameAutons.getOwnBlocksLeft(m_xrpDrivetrain));
+    m_chooser.addOption("Steal From Railex", GameAutons.stealFromRailex(m_xrpDrivetrain));
+    m_chooser.addOption("Disrupt Tony", GameAutons.disruptTony(m_xrpDrivetrain));
+    m_chooser.addOption("Total Sabotage Right", GameAutons.totalSabotageRight(m_xrpDrivetrain));
+    m_chooser.addOption("Total Sabotage Left", GameAutons.totalSabotageLeft(m_xrpDrivetrain));
+    SmartDashboard.putData(m_chooser);
+  }
+
+  public Command getAutonomousCommand() {
+    return m_chooser.getSelected();
+  }
+
   @Override
   public void robotPeriodic() {
-    // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
-    // commands, running already-scheduled commands, removing finished or interrupted commands,
-    // and running subsystem periodic() methods.  This must be called from the robot's periodic
-    // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
   }
 
-  /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {}
 
   @Override
   public void disabledPeriodic() {}
 
-  /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
-    // schedule the autonomous command (example)
+    m_autonomousCommand = m_chooser.getSelected();
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
   }
 
-  /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {}
 
   @Override
   public void teleopInit() {
-    // This makes sure that the autonomous stops running when
-    // teleop starts running. If you want the autonomous to
-    // continue until interrupted by another command, remove
-    // this line or comment it out.
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    CommandScheduler.getInstance().schedule(m_xrpSuperstructure.drive(m_leftY, m_rightY));
   }
 
-  /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {
-    m_robotContainer.drive();
-  }
+  public void teleopPeriodic() {}
 
   @Override
   public void testInit() {
-    // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
   }
 
-  /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {}
 }

@@ -63,9 +63,9 @@ public class GameAutons {
     }
     
     private static Command drive(XRPDrivetrain drivetrain, double leftWheelSpeed, double rightWheelSpeed, double seconds) {
-        return Commands.race(
-                Commands.run(() -> drivetrain.tankDrive(leftWheelSpeed, rightWheelSpeed)),
-                Commands.waitSeconds(seconds)
+        return Commands.deadline(
+            Commands.waitSeconds(seconds),
+            drivetrain.tankDriveCmd(() -> leftWheelSpeed, () -> rightWheelSpeed)
         );
     }
 }

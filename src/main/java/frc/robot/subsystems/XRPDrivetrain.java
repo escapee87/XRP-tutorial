@@ -4,9 +4,13 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.xrp.XRPMotor;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class XRPDrivetrain extends SubsystemBase {
@@ -26,7 +30,6 @@ public class XRPDrivetrain extends SubsystemBase {
   private final Encoder m_leftEncoder = new Encoder(4, 5);
   private final Encoder m_rightEncoder = new Encoder(6, 7);
 
-  // Set up the differential drive controller
   private final DifferentialDrive m_diffDrive =
       new DifferentialDrive(m_leftMotor::set, m_rightMotor::set);
 
@@ -45,8 +48,16 @@ public class XRPDrivetrain extends SubsystemBase {
     m_diffDrive.arcadeDrive(xaxisSpeed, zaxisRotate);
   }
 
+  public Command arcadeDriveCmd(DoubleSupplier supp_xaxisSpeed, DoubleSupplier supp_zaxisRotate) {
+    return Commands.run(() -> arcadeDrive(supp_xaxisSpeed.getAsDouble(), supp_zaxisRotate.getAsDouble()));
+  }
+
   public void tankDrive(double leftWheelSpeed, double rightWheelSpeed) {
     m_diffDrive.tankDrive(leftWheelSpeed, rightWheelSpeed);
+  }
+
+  public Command tankDriveCmd(DoubleSupplier supp_leftWheelSpeed, DoubleSupplier supp_rightWheelSpeed) {
+    return Commands.run(() -> tankDrive(supp_leftWheelSpeed.getAsDouble(), supp_rightWheelSpeed.getAsDouble()));
   }
 
   public void resetEncoders() {
@@ -63,12 +74,8 @@ public class XRPDrivetrain extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
+  public void periodic() {}
 
   @Override
-  public void simulationPeriodic() {
-    // This method will be called once per scheduler run during simulation
-  }
+  public void simulationPeriodic() {}
 }
